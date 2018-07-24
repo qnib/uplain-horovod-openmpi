@@ -10,7 +10,7 @@ ARG OMPI_VER=3.1.1
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
     wget -qO- https://www.open-mpi.org/software/ompi/v3.1/downloads/openmpi-${OMPI_VER}.tar.gz |tar xfz - --strip-components=1 && \
-    ./configure --enable-orterun-prefix-by-default --with-cuda && \
+    ./configure --enable-orterun-prefix-by-default && \
     make -j $(nproc) all && \
     make install && \
     ldconfig \

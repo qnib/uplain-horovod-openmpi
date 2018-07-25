@@ -10,7 +10,7 @@ ARG OMPI_VER=3.1.1
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
     wget -qO- https://www.open-mpi.org/software/ompi/v3.1/downloads/openmpi-${OMPI_VER}.tar.gz |tar xfz - --strip-components=1 && \
-    ./configure --enable-orterun-prefix-by-default && \
+    ./configure --enable-orterun-prefix-by-default --with-cuda --enable-mpi-ext=cuda && \
     make -j $(nproc) all && \
     make install && \
     ldconfig \
@@ -31,8 +31,8 @@ RUN mv /usr/local/bin/mpirun /usr/local/bin/mpirun.real && \
 # Configure OpenMPI to run good defaults:
 #   --bind-to none --map-by slot --mca btl_tcp_if_exclude lo,docker0
 RUN echo "hwloc_base_binding_policy = none" >> /usr/local/etc/openmpi-mca-params.conf && \
-    echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf && \
-    echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf
+    echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf \
+ && echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf
 
 # Set default NCCL parameters
 RUN echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
